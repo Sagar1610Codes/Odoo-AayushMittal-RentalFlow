@@ -16,7 +16,8 @@ const registerSchema = Joi.object({
   category: Joi.string().allow(''),
   gstin: gstin.allow(''),
   phone,
-  address: Joi.object().optional()
+  address: Joi.object().optional(),
+  profile_image: Joi.string().uri().allow('', null)
 });
 
 const loginSchema = Joi.object({

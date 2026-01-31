@@ -7,7 +7,7 @@ const createProductSchema = Joi.object({
   category: Joi.string().required(),
   brand: Joi.string(),
   is_published: Joi.boolean().default(false),
-  images: Joi.array().items(Joi.string()),
+  images: Joi.array().items(Joi.string().uri()),
   variants: Joi.array().min(1).items(
     Joi.object({
       sku: Joi.string().required(),
@@ -27,7 +27,7 @@ const updateProductSchema = Joi.object({
   category: Joi.string(),
   brand: Joi.string(),
   is_published: Joi.boolean(),
-  images: Joi.array().items(Joi.string())
+  images: Joi.array().items(Joi.string().uri())
 });
 
 module.exports = {

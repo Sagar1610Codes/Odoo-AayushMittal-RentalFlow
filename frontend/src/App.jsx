@@ -11,6 +11,7 @@ import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
 import Dashboard from './pages/Dashboard'
 import Products from './pages/Products'
+import ProductDetail from './pages/ProductDetail'
 import Orders from './pages/Orders'
 import NotFound from './pages/NotFound'
 
@@ -23,6 +24,7 @@ function App() {
           <Route element={<MainLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<Products />} />
+            <Route path="/products/:id" element={<ProductDetail />} />
           </Route>
 
           {/* Auth routes with AuthLayout */}

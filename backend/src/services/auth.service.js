@@ -92,7 +92,7 @@ const registerUser = async (userData) => {
       `INSERT INTO users 
        (email, password_hash, role, name, company, category, gstin, phone) 
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
-       RETURNING id, email, role, name, company, category, gstin, phone, created_at`,
+       RETURNING id, email, role, name, company, category, gstin, phone, profile_image, created_at`,
       [email, passwordHash, role, name, company, category, gstin, phone]
     );
     
