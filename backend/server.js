@@ -4,11 +4,17 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 
+// Import routes
+const authRoutes = require('./src/routes/auth.routes');
+
 const app = express();
 
 // Middleware
 app.use(helmet()); // Security headers
-app.use(cors({ origin: process.env.CORS_ORIGIN || 'http://localhost:5173' }));
+app.use(cors({ 
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  credentials: true // Allow cookies to be sent
+}));
 app.use(express.json()); // Parse JSON bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(morgan('dev')); // HTTP request logging
@@ -30,10 +36,14 @@ app.get('/api', (req, res) => {
     version: '1.0.0',
     endpoints: {
       health: '/health',
-      api: '/api'
+      api: '/api',
+      auth: '/api/auth'
     }
   });
 });
+
+// Routes
+app.use('/api/auth', authRoutes);
 
 // 404 handler
 app.use((req, res) => {
