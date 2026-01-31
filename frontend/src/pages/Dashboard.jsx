@@ -1,24 +1,68 @@
+import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { Package, ShoppingCart, FileText, TrendingUp, Clock, CheckCircle } from 'lucide-react'
+import { getVendorStats, getCustomerStats, getRecentOrders } from '../services/dashboard'
 
 function Dashboard() {
   const { user } = useAuth()
+  const [stats, setStats] = useState(null)
+  const [recentOrders, setRecentOrders] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const vendorStats = [
-    { icon: Package, label: 'My Products', value: '24', color: 'bg-blue-500' },
-    { icon: ShoppingCart, label: 'Total Orders', value: '48', color: 'bg-green-500' },
-    { icon: FileText, label: 'Invoices', value: '32', color: 'bg-purple-500' },
-    { icon: TrendingUp, label: 'Revenue', value: '₹2.4L', color: 'bg-orange-500' },
-  ]
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
 
-  const customerStats = [
-    { icon: Package, label: 'Available Products', value: '124', color: 'bg-blue-500' },
-    { icon: ShoppingCart, label: 'My Orders', value: '5', color: 'bg-green-500' },
-    { icon: Clock, label: 'Pending', value: '2', color: 'bg-yellow-500' },
-    { icon: CheckCircle, label: 'Completed', value: '3', color: 'bg-green-600' },
-  ]
+        const statsData = user?.role === 'VENDOR' 
+          ? await getVendorStats() 
+          : await getCustomerStats()
+        
+        setStats(statsData)
 
-  const stats = user?.role === 'VENDOR' ? vendorStats : customerStats
+        const ordersData = await getRecentOrders(5)
+        setRecentOrders(ordersData)
+      } catch (err) {
+        setError('Failed to load dashboard data')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (user) {
+      fetchDashboardData()
+    }
+  }, [user])
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: 'INR',
+      maximumFractionDigits: 0
+    }).format(amount)
+  }
+
+  const getStatsConfig = () => {
+    if (user?.role === 'VENDOR') {
+      return [
+        { icon: Package, label: 'My Products', value: stats?.productCount || 0, color: 'bg-blue-500' },
+        { icon: ShoppingCart, label: 'Total Orders', value: stats?.orderCount || 0, color: 'bg-green-500' },
+        { icon: FileText, label: 'Invoices', value: stats?.invoiceCount || 0, color: 'bg-purple-500' },
+        { icon: TrendingUp, label: 'Revenue', value: formatCurrency(stats?.revenue || 0), color: 'bg-orange-500' },
+      ]
+    } else {
+      return [
+        { icon: Package, label: 'Available Products', value: stats?.availableProducts || 0, color: 'bg-blue-500' },
+        { icon: ShoppingCart, label: 'My Orders', value: stats?.myOrders || 0, color: 'bg-green-500' },
+        { icon: Clock, label: 'Pending', value: stats?.pending || 0, color: 'bg-yellow-500' },
+        { icon: CheckCircle, label: 'Completed', value: stats?.completed || 0, color: 'bg-green-600' },
+      ]
+    }
+  }
+
+  const statsConfig = stats ? getStatsConfig() : []
 
   const vendorActions = [
     { label: 'Add New Product', color: 'bg-blue-50 hover:bg-blue-100' },
@@ -33,6 +77,22 @@ function Dashboard() {
   ]
 
   const quickActions = user?.role === 'VENDOR' ? vendorActions : customerActions
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <p className="text-red-800">{error}</p>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -49,7 +109,7 @@ function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {stats.map((stat) => {
+        {statsConfig.map((stat) => {
           const Icon = stat.icon
           return (
             <div key={stat.label} className="bg-white rounded-lg shadow p-6">
@@ -72,7 +132,34 @@ function Dashboard() {
           <h2 className="text-lg font-semibold mb-4">
             {user?.role === 'VENDOR' ? 'Recent Orders' : 'My Recent Orders'}
           </h2>
-          <p className="text-gray-500">No recent orders</p>
+          {recentOrders.length === 0 ? (
+            <p className="text-gray-500">No recent orders</p>
+          ) : (
+            <div className="space-y-3">
+              {recentOrders.map((order) => (
+                <div key={order.id} className="border-l-4 border-blue-500 pl-4 py-2">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="font-medium">{order.order_number}</p>
+                      <p className="text-sm text-gray-600">
+                        {new Date(order.created_at).toLocaleDateString('en-IN')}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{formatCurrency(order.total_amount)}</p>
+                      <span className={`text-xs px-2 py-1 rounded-full ${
+                        order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
+                        order.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {order.status}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="bg-white rounded-lg shadow p-6">

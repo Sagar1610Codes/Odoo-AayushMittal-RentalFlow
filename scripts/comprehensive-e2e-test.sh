@@ -632,6 +632,7 @@ test_api_endpoints() {
     # Test 5: Create Product (VENDOR only)
     test_start "POST /api/products (VENDOR)"
     if [ -n "$VENDOR_TOKEN" ]; then
+        UNIQUE_SKU="CAM-TEST-$(date +%s)"
         CREATE_PRODUCT_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/products" \
             -H "Authorization: Bearer $VENDOR_TOKEN" \
             -H "Content-Type: application/json" \
@@ -644,7 +645,7 @@ test_api_endpoints() {
                 "images": [],
                 "variants": [
                     {
-                        "sku": "CAM-TEST-001",
+                        "sku": "'${UNIQUE_SKU}'",
                         "attributes": {"color": "black"},
                         "price_daily": 100,
                         "price_weekly": 600,

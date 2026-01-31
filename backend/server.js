@@ -8,6 +8,8 @@ const morgan = require('morgan');
 const authRoutes = require('./src/routes/auth.routes');
 const productRoutes = require('./src/routes/product.routes');
 const uploadRoutes = require('./src/routes/upload.routes');
+const reservationRoutes = require('./src/routes/reservation.routes');
+const orderRoutes = require('./src/routes/order.routes');
 
 const app = express();
 
@@ -41,7 +43,9 @@ app.get('/api', (req, res) => {
       api: '/api',
       auth: '/api/auth',
       products: '/api/products',
-      upload: '/api/upload'
+      upload: '/api/upload',
+      reservations: '/api/reservations',
+      orders: '/api/orders'
     }
   });
 });
@@ -50,6 +54,8 @@ app.get('/api', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/reservations', reservationRoutes);
+app.use('/api/orders', orderRoutes);
 
 // 404 handler
 app.use((req, res) => {

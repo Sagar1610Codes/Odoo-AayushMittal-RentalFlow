@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-01-31 19:59:29.478145",
+  "summary": {
+    "total": 15,
+    "passed": 10,
+    "failed": 5,
+    "rate": 66.66666666666666
+  },
+  "results": [
+    {
+      "test": 1,
+      "name": "Backend Health",
+      "passed": true,
+      "details": "Status 200"
+    },
+    {
+      "test": 2,
+      "name": "Register Vendor",
+      "passed": true,
+      "details": "ID 14"
+    },
+    {
+      "test": 3,
+      "name": "Register Customer",
+      "passed": true,
+      "details": "ID 15"
+    },
+    {
+      "test": 4,
+      "name": "Create Product (Vendor)",
+      "passed": true,
+      "details": "Product 5, Variant 8"
+    },
+    {
+      "test": 5,
+      "name": "Get All Products (Public)",
+      "passed": true,
+      "details": "Found 1 products"
+    },
+    {
+      "test": 6,
+      "name": "Get Product by ID",
+      "passed": true,
+      "details": "Name: Professional Camera Kit"
+    },
+    {
+      "test": 7,
+      "name": "Update Product (Vendor)",
+      "passed": true,
+      "details": "Successfully updated"
+    },
+    {
+      "test": 8,
+      "name": "RBAC: Block Customer Create",
+      "passed": false,
+      "details": "Correctly blocked"
+    },
+    {
+      "test": 9,
+      "name": "Check Availability",
+      "passed": false,
+      "details": "'data'"
+    },
+    {
+      "test": 10,
+      "name": "Create Order",
+      "passed": false,
+      "details": "\"items[0].variantId\" is required"
+    },
+    {
+      "test": 11,
+      "name": "Get Customer Orders",
+      "passed": true,
+      "details": "Found 0 orders"
+    },
+    {
+      "test": 12,
+      "name": "Get Customer Reservations",
+      "passed": true,
+      "details": "Found 0 reservations"
+    },
+    {
+      "test": 13,
+      "name": "Get Order by ID",
+      "passed": false,
+      "details": "No order ID"
+    },
+    {
+      "test": 14,
+      "name": "Cancel Order",
+      "passed": false,
+      "details": "No order ID"
+    },
+    {
+      "test": 15,
+      "name": "Delete Product (Cleanup)",
+      "passed": true,
+      "details": "Product deleted"
+    }
+  ]
+}

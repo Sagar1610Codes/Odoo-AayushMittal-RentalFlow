@@ -5,7 +5,6 @@ import AuthLayout from './components/layout/AuthLayout'
 import DashboardLayout from './components/layout/DashboardLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 
-// Pages
 import Home from './pages/Home'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
@@ -13,6 +12,8 @@ import Dashboard from './pages/Dashboard'
 import Products from './pages/Products'
 import ProductDetail from './pages/ProductDetail'
 import Orders from './pages/Orders'
+import Reservations from './pages/Reservations'
+import MyProducts from './pages/MyProducts'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -47,6 +48,8 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard/products" element={<Products />} />
             <Route path="/dashboard/orders" element={<Orders />} />
+            <Route path="/dashboard/reservations" element={<Reservations />} />
+            <Route path="/dashboard/my-products" element={<MyProducts />} />
           </Route>
 
           {/* 404 */}
